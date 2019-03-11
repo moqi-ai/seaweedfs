@@ -13,6 +13,7 @@ import (
 
 	"github.com/chrislusf/raft"
 	"github.com/chrislusf/seaweedfs/weed/glog"
+    "github.com/chrislusf/seaweedfs/weed/util"
 	"github.com/chrislusf/seaweedfs/weed/topology"
 	"github.com/gorilla/mux"
 )
@@ -65,6 +66,7 @@ func NewRaftServer(r *mux.Router, peers []string, httpAddr string, dataDir strin
 	s.raftServer.SetHeartbeatInterval(500 * time.Millisecond)
 	s.raftServer.SetElectionTimeout(time.Duration(pulseSeconds) * 500 * time.Millisecond)
 	s.raftServer.Start()
+    rand.Seed(util.HashBytesToInt64([]byte(httpAddr)))
 
 	s.router.HandleFunc("/cluster/status", s.statusHandler).Methods("GET")
 
